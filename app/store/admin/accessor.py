@@ -10,10 +10,13 @@ if typing.TYPE_CHECKING:
 class AdminAccessor(BaseAccessor):
     async def connect(self, app: "Application") -> None:
         # TODO: создать админа по данным в config.yml здесь
-        raise NotImplementedError
+        # raise NotImplementedError
+        pass
 
     async def get_by_email(self, email: str) -> Admin | None:
-        raise NotImplementedError
+        # raise NotImplementedError
+        pass
 
     async def create_admin(self, email: str, password: str) -> Admin:
-        raise NotImplementedError
+        # raise NotImplementedError
+        pass

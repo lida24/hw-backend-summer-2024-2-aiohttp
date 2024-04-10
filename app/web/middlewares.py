@@ -1,7 +1,7 @@
 import json
 import typing
 
-from aiohttp.web_exceptions import HTTPUnprocessableEntity
+from aiohttp.web_exceptions import HTTPUnprocessableEntity, HTTPException
 from aiohttp.web_middlewares import middleware
 from aiohttp_apispec import validation_middleware
 
@@ -32,10 +32,20 @@ async def error_handling_middleware(request: "Request", handler):
             message=e.reason,
             data=json.loads(e.text),
         )
+    except HTTPException as e:
+        return error_json_response(
+            http_status=e.status,
+            status=HTTP_ERROR_CODES[e.status],
+            message=e.reason,
+        )
+    except Exception as e:
+        return error_json_response(
+            http_status=500,
+            status="internal server error",
+            message=str(e),
+        )
 
     return response
-    # TODO: обработать все исключения-наследники HTTPException и отдельно Exception, как server error
-    #  использовать текст из HTTP_ERROR_CODES
 
 
 def setup_middlewares(app: "Application"):
