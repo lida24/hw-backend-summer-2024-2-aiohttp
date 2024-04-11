@@ -32,13 +32,20 @@ class QuizAccessor(BaseAccessor):
     async def create_question(
         self, title: str, theme_id: int, answers: list[Answer]
     ) -> Question:
-        question = Question(id=self.app.database.next_question_id, title=title, theme_id=theme_id, answers=answers)
+        question = Question(
+            id=self.app.database.next_question_id,
+            title=title,
+            theme_id=theme_id,
+            answers=answers,
+        )
         self.app.database.questions.append(question)
         return question
 
-    async def list_questions(
-        self, theme_id: int | None = None
-    ) -> list[Question]:
+    async def list_questions(self, theme_id: int | None = None) -> list[Question]:
         if theme_id:
-            return [question for question in self.app.database.questions if question.theme_id == theme_id]
+            return [
+                question
+                for question in self.app.database.questions
+                if question.theme_id == theme_id
+            ]
         return self.app.database.questions.copy()

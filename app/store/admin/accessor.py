@@ -10,7 +10,9 @@ if typing.TYPE_CHECKING:
 class AdminAccessor(BaseAccessor):
     async def connect(self, app: "Application") -> None:
         await super().connect(app)
-        await self.create_admin(email=self.app.config.admin.email, password=self.app.config.admin.password)
+        await self.create_admin(
+            email=self.app.config.admin.email, password=self.app.config.admin.password
+        )
 
     async def get_by_email(self, email: str) -> Admin | None:
         for admin in self.app.database.admins:
@@ -19,6 +21,10 @@ class AdminAccessor(BaseAccessor):
         return None
 
     async def create_admin(self, email: str, password: str) -> Admin:
-        admin = Admin(id=self.app.database.next_admin_id, email=email, password=Admin.hash_password(password))
+        admin = Admin(
+            id=self.app.database.next_admin_id,
+            email=email,
+            password=Admin.hash_password(password),
+        )
         self.app.database.admins.append(admin)
         return admin

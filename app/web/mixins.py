@@ -7,5 +7,5 @@ class AuthRequiredMixin:
     async def _iter(self) -> StreamResponse:
         session = await get_session(self.request)
         if session.new:
-            raise HTTPUnauthorized
+            raise HTTPUnauthorized(reason="The user is not authorized")
         return await super()._iter()

@@ -1,7 +1,12 @@
 import json
 import typing
 
-from aiohttp.web_exceptions import HTTPUnprocessableEntity, HTTPException, HTTPUnauthorized, HTTPForbidden
+from aiohttp.web_exceptions import (
+    HTTPUnprocessableEntity,
+    HTTPException,
+    HTTPUnauthorized,
+    HTTPForbidden,
+)
 from aiohttp.web_middlewares import middleware
 from aiohttp_apispec import validation_middleware
 from aiohttp_session import get_session
@@ -28,8 +33,6 @@ async def auth_middleware(request: "Request", handler):
     session = await get_session(request)
     if session:
         request.admin = Admin.get_current_session(session)
-    else:
-        request.admin = None
     return await handler(request)
 
 
