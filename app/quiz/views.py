@@ -3,11 +3,11 @@ from aiohttp_apispec import request_schema, response_schema, querystring_schema
 
 from app.quiz.schemes import ThemeSchema, ThemeListSchema, QuestionSchema, ThemeIdSchema, ListQuestionSchema
 from app.web.app import View
+from app.web.mixins import AuthRequiredMixin
 from app.web.utils import json_response
 
 
-# TODO: добавить проверку авторизации для этого View
-class ThemeAddView(View):
+class ThemeAddView(AuthRequiredMixin, View):
     @request_schema(ThemeSchema)
     @response_schema(ThemeSchema)
     # TODO: добавить валидацию с помощью aiohttp-apispec и marshmallow-схем
@@ -19,7 +19,7 @@ class ThemeAddView(View):
         return json_response(data=ThemeSchema().dump(theme))
 
 
-class ThemeListView(View):
+class ThemeListView(AuthRequiredMixin, View):
     @response_schema(ThemeListSchema)
     async def get(self):
         themes = await self.store.quizzes.list_themes()
@@ -27,7 +27,7 @@ class ThemeListView(View):
         return json_response({"themes": raw_themes})
 
 
-class QuestionAddView(View):
+class QuestionAddView(AuthRequiredMixin, View):
     @request_schema(QuestionSchema)
     @response_schema(QuestionSchema)
     async def post(self):
@@ -47,7 +47,7 @@ class QuestionAddView(View):
         return json_response(data=QuestionSchema().dump(question))
 
 
-class QuestionListView(View):
+class QuestionListView(AuthRequiredMixin, View):
     @querystring_schema(ThemeIdSchema)
     @response_schema(ListQuestionSchema)
     async def get(self):
